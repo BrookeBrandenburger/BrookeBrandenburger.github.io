@@ -1,0 +1,3 @@
+[submodule "mcbroken-archive"]
+	path = mcbroken-archive
+	url = https://github.com/BrookeBrandenburger/McBroken.git
