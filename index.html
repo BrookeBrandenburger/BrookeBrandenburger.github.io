@@ -14,17 +14,63 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-<h1>Can I Get Ice Cream Today?</h1>
-<p>
+<h1 style="font-size: 46px;">Can I Get Ice Cream Today?</h1>
+<p style="font-size: 30px;">
     This map shows McDonald's ice cream machine statuses. Green dots indicate
-    working machines, while red dots signify broken machines.
+    working machines, while red dots signify broken machines. Hover over a machine
+    on the map to get more details or click on the point to pull up a bar chart
+    reflecting the machines status in that area!
 </p>
 <div id="map" style="height: 500px;"></div>
 <!-- Bar chart container -->
-<div id="chart-title" style="text-align: left; font-size: 24px; font-weight: bold; margin-bottom: 20px; margin-top: 20px"></div>
-<div id="bar-chart-container" style="height: 500px; margin-top: 20px;">
-    <svg id="bar-chart" width="1200" height="800"></svg>
+<!-- the div for my dynamic title that adjusts depending on what the bar chart is showing-->
+<div id="chart-title" style="text-align: left; font-size: 24px; font-weight: bold; margin-bottom: 0px; margin-top: 30px; margin-left: 370px"></div>
+<!-- the div for the project overview / data explaination section-->
+<!-- all manually coded to have the spacing make sense-->
+<div id="label-title" style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 0px; margin-top: -30px; margin-left: 950px">
+    Project Specs and In-depth Overview
 </div>
+<!-- used a display style flex to allow me to have both the bar chart and infographic spaced out without having to do it all by hand -->
+<div style="display: flex; margin-top: 30px;">
+    <!-- -->
+    <!-- dont judge i needed comments in here and i used the above to copy and paste the format -->
+    <!-- div for my bar chart takes up 50 percent of width -->
+    <div id="bar-chart-container" style="height: 500px; width: 50%; margin-left: 40px;">
+        <svg id="bar-chart" width="100%" height="500"></svg>
+    </div>
+    <!-- infographic div -->
+    <div id="infographic" class="info-box" style="height: 500px; width: 50%; margin-left: 40px;">
+        <p><strong>Created By:</strong> Brooke and Jangael</p>
+        <p><strong>Date:</strong> 12/12/2024 </p>
+        <!--found a cool way to insert the link directly to our data set-->
+        <p><strong>Data Source:</strong> <a href="https://www.kaggle.com/datasets/thedevastator/mcdonalds-ice-cream-machines-broken-timeseries?resource=download" target="_blank">Kaggle McDonald's Dataset</a></p>
+        <m><strong>Data Highlights:</strong></m>
+        <ul>
+            <li>About 16,000 McDonald's locations analyzed</li>
+            <li>No duplicate rows in the dataset --> all unique McDonald's locations</li>
+            <li>Missing 'state' and 'city' fields for non-US locations</li>
+            <!-- added a margin to give a double indent-->
+            <li style="margin-left: 20px">Did not drop or impute just replaced city/state tag with country</li>
+            <li>Ice Cream Machine Status categories: working, broken, inactive, unknown</li>
+            <li style="margin-left: 20px">'Unknown' status was created in to visually mark the unexpected machine status'</li>
+            <li style="margin-left: 20px">This was not really used more of a just in case</li>
+            <li>No imputation for missing values--> handled differently</li>
+        </ul>
+        <m><strong>Code Insights:</strong></m>
+        <ul>
+            <li>Used D3.js to process and visualize data</li>
+            <li>Can visualize the odds by area of machines down</li>
+            <li>Interactive map and bar chart for detailed breakdown</li>
+            <li style="margin-left: 20px"> Map shows all McDonald Locations and their Machine status</li>
+            <li style="margin-left: 20px"> Bar Chart shows the global counts of machine availability</li>
+            <li>Availabile Interactions: </li>
+            <li style="margin-left: 20px"> Hover Over Machines on Map to get store details! </li>
+            <li style="margin-left: 20px"> Click on a Map Point to get the localized details! </li>
+            <li style="margin-left: 40px"> Shows the state if in the US or Countries Machine availability </li>
+        </ul>
+    </div>
+</div>
+
 <script src="Main.js"></script>
 </body>
 </html>

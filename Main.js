@@ -61,9 +61,9 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
         if (status === "working") {
             return "green";
         } else if (status === "broken") {
-            return "yellow";
+            return "#F7D300";
         } else if (status === "inactive") {
-            return "red";
+            return "#DA291C";
         }
         return "gray"; //backup color just in case nothing matched would be the 'unknown' case
     }
@@ -82,9 +82,9 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
                 value: values.length
             }));
         //dimensions
-        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
-        const width = 800 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const margin = { top: 20, right: 30, bottom: 50, left: 70 };
+        const width = 1000 - margin.left - margin.right;
+        const height = 500 - margin.top - margin.bottom;
 
         //had no clue how to erase visual looked up this line to reset
         //stack overflow helped
@@ -99,10 +99,10 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
         const x = d3.scaleBand()
             .domain(statusCounts.map(d => d.key))
             .range([0, width])
-            .padding(0.1);
+            .padding(0.2);
 
         const y = d3.scaleLinear()
-            .domain([0, d3.max(statusCounts, d => d.value)])
+            .domain([20, d3.max(statusCounts, d => d.value)])
             .nice()
             .range([height, 0]);
         //making the background white so the graph pops
@@ -121,14 +121,28 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
             .attr("fill", d => getColor(d.key));
 
         svg.append("g")
-            .selectAll(".x-axis")
-            .data([statusCounts])
-            .enter().append("g")
             .attr("transform", `translate(0, ${height})`)
             .call(d3.axisBottom(x));
 
+        svg.append("text")
+            .attr("class", "x-axis-label")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom - 10)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#F7D300")
+            .text("Machine Status");
+
         svg.append("g")
             .call(d3.axisLeft(y));
+
+        svg.append("text")
+            .attr("class", "y-axis-label")
+            .attr("x", -height / 2)
+            .attr("y", -margin.left + 15)
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("fill", "#F7D300")
+            .text("Number of Machines");
     }
     updateBarChart(locations, 'Total Global Machines Operational');
 
@@ -172,16 +186,16 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
             updateBarChart(filteredData, title);
         });
 
-        // Bind popup to marker on mouseover
+        //bind popup to marker on mouseover
         marker.on('mouseover', function() {
             marker.bindPopup(
-                `<strong>Status:</strong> ${loc.status}<br><strong>Address:</strong> ${loc.address || 'No address available'}`
+                `<strong>Status:</strong> ${loc.status}<br><strong>Address:</strong> ${loc.address || 'No address available'}<br><strong>Location:</strong> ${loc.state || loc.country}`
             ).openPopup();
         });
 
-        // Optionally, you can also keep the popup open on mouseout or mouseleave if you want to control visibility
+        //closes popup after mouse out
         marker.on('mouseout', function() {
-            marker.closePopup();  // Close the popup when mouse leaves
+            marker.closePopup();
         });
     });
     //make my legened for the color key
@@ -189,14 +203,15 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
     //using html to create an info box
     legend.onAdd = function () {
         const div = L.DomUtil.create('div', 'info legend');
-        div.style.backgroundColor = "black";  // Add black background
-        div.style.color = "white";  // Change text color to white
-        div.style.padding = "10px";  // Add some padding
+        //add black background was hard to see a transparent legend with the background noise
+        div.style.backgroundColor = "black";
+        div.style.color = "white";
+        div.style.padding = "10px";
         div.innerHTML = `
             <h4>Ice Cream Machine Status</h4>
             <i style="background: green; width: 18px; height: 18px; display: inline-block;"></i> Working<br>
-            <i style="background: yellow; width: 18px; height: 18px; display: inline-block;"></i> Broken<br>
-            <i style="background: red; width: 18px; height: 18px; display: inline-block;"></i> Inactive<br>
+            <i style="background: #F7D300; width: 18px; height: 18px; display: inline-block;"></i> Broken<br>
+            <i style="background: #DA291C; width: 18px; height: 18px; display: inline-block;"></i> Inactive<br>
             <i style="background: grey; width: 18px; height: 18px; display: inline-block;"></i> Unknown
         `;
         return div;

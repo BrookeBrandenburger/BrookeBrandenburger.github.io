@@ -1,4 +1,58 @@
 body {
     background-color: #DA291C;
     color: #F7D300;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+/* this was my style sheet so i did not have to use much effort to change the font colors and size could just have fucntions for it*/
+h1 {
+    text-align: center;
+    margin: 10px 0;
+}
+t {
+    text-align: center;
+    margin: 10px 0;
+}
+p {
+    text-align: center;
+    margin: 10px 0;
+}
+m {
+    text-align: left;
+    margin: 10px 0;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.info-box {
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+}
+
+.info-box h3 {
+    color: #F7D300;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.info-box a {
+    color: #00AEEF;
+    text-decoration: none;
+}
+
+.info-box ul {
+    list-style: circle;
+    margin: 10px 0 0 20px;
+    padding: 0;
 }
