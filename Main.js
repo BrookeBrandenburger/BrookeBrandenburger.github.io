@@ -37,7 +37,16 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
     //view the whole data array in the web pages console
     console.log(locations);
 
-
+    //function to get radius based on zoom level
+    //used this to attempt to help with data overlap from so many points and
+    function getMarkerRadius(zoomLevel) {
+        //base radius and scaling factor
+        const baseRadius = 1;
+        //factor the radius grows by based on zoom
+        const scaleFactor = 1.5;
+        //calculated new radius value
+        return baseRadius * Math.pow(scaleFactor, zoomLevel - 3);
+    }
     //picked a northern hemisphere biased view as the data we have is concentrated to USA germany and UK
     //get a focused global view
     const map = L.map('map').setView([50, -90], 3);
@@ -59,7 +68,9 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
         return "gray"; //backup color just in case nothing matched would be the 'unknown' case
     }
     //my bar chart method that creates a visual for how many machines by state of country are down
-    function updateBarChart(data) {
+    function updateBarChart(data, title) {
+        //update the title
+        d3.select("#chart-title").text(title);
         //looked online for the .groups method
         //similar to a python groupby it groups the specific data on status
         const statusCounts = d3.groups(data, d => d.status)
@@ -74,7 +85,7 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
         const margin = { top: 20, right: 30, bottom: 40, left: 40 };
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
-        
+
         //had no clue how to erase visual looked up this line to reset
         //stack overflow helped
         d3.select("#bar-chart").html('');
@@ -94,6 +105,10 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
             .domain([0, d3.max(statusCounts, d => d.value)])
             .nice()
             .range([height, 0]);
+        //making the background white so the graph pops
+        d3.select("#bar-chart").style("background-color", "black")
+            .style("padding", "10px")
+            .style("border-radius", "8px");
 
         svg.selectAll(".bar")
             .data(statusCounts)
@@ -115,36 +130,46 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
         svg.append("g")
             .call(d3.axisLeft(y));
     }
-    updateBarChart(locations);
+    updateBarChart(locations, 'Total Global Machines Operational');
 
     //creating the marker for each mcdonals store
     //this method watches for two separte inputs from user a hover over to display the stores details
     //or a mouse click to look at the bar chart break down in detail of the state
     locations.forEach(loc => {
         const marker = L.circleMarker([loc.lng, loc.lat], {
-            radius: 2,
+            radius: getMarkerRadius(map.getZoom()),
             //uses color function to reflect machine status
             color: getColor(loc.status),
             fillOpacity: 0.8
         }).addTo(map);
+
+        map.on('zoom', function() {
+            marker.setRadius(getMarkerRadius(map.getZoom()));
+        });
 
         //update bar chart on mouse click
         marker.on('click', function() {
             //create a new variable for filtered data
             //allows us to only look at specifics not the whole thing
             let filteredData;
+            let title;
             //since there are nans in the state for everything outside of the us sort based on country first
             if (loc.country === 'USA') {
                 //filter by state if the location is within the USA
                 //have enough data for it to make sense
                 filteredData = locations.filter(d => d.state === loc.state);
+                //accesses the locations state and replaces the blank with the state name
+                //uses the ` instead of ' to allow insert
+                title = `Ice Cream Machine Status for ${loc.state}, USA`;
             } else {
                 //filter by country if the location is outside the USA
                 //less data
                 filteredData = locations.filter(d => d.country === loc.country);
+                //does the same for country to pass in the updated title
+                title = `Ice Cream Machine Status for ${loc.country}`;
             }
             //calls method to update the chart with the specific data from user mouse click input
-            updateBarChart(filteredData);
+            updateBarChart(filteredData, title);
         });
 
         // Bind popup to marker on mouseover
@@ -159,24 +184,14 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
             marker.closePopup();  // Close the popup when mouse leaves
         });
     });
-    /*//add markers to the map at mcdonalds locations showing status
-    locations.forEach(loc => {
-        const marker = L.circleMarker([loc.lng, loc.lat], {
-            radius: 2,
-            color: getColor(loc.status),
-            fillOpacity: 0.8
-        }).addTo(map);
-
-        //on mouse click open the popup containing the status and address
-        //has catch for address as I struggled to get that loaded perfectly
-        marker.bindPopup(
-            `<strong>Status:</strong> ${loc.status}<br><strong>Address:</strong> ${loc.address || 'No address available'}`)
-    });*/
     //make my legened for the color key
     const legend = L.control({ position: 'bottomright' });
     //using html to create an info box
     legend.onAdd = function () {
         const div = L.DomUtil.create('div', 'info legend');
+        div.style.backgroundColor = "black";  // Add black background
+        div.style.color = "white";  // Change text color to white
+        div.style.padding = "10px";  // Add some padding
         div.innerHTML = `
             <h4>Ice Cream Machine Status</h4>
             <i style="background: green; width: 18px; height: 18px; display: inline-block;"></i> Working<br>
