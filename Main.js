@@ -49,7 +49,7 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
     }
     //picked a northern hemisphere biased view as the data we have is concentrated to USA germany and UK
     //get a focused global view
-    const map = L.map('map').setView([50, -90], 3);
+    const map = L.map('map').setView([45, -60], 4);
     //import leaflet
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
@@ -83,7 +83,7 @@ d3.csv('mcdonalds_dataset.csv').then((data) => {
             }));
         //dimensions
         const margin = { top: 20, right: 30, bottom: 50, left: 70 };
-        const width = 1000 - margin.left - margin.right;
+        const width = 575 - margin.left - margin.right;
         const height = 500 - margin.top - margin.bottom;
 
         //had no clue how to erase visual looked up this line to reset
