@@ -1,7 +1,7 @@
 # Can Brooke and Jangael Get a McFlurry Today? 
 ## Created by Brooke & Jangael for the COM349 Final
 
-This website is inspiration from the original [McBroken.com](https://mcbroken.com/) website, that visualizes all of the active and inactive ice cream machines at McDonalds locations at the United States and in Europe.\
+This website is inspiration from the original [McBroken.com](https://mcbroken.com/) website, that visualizes all of the active and inactive ice cream machines at McDonalds locations at the United States and in Europe.
 
 # Data Highlights:
 * About 16,000 McDonald's locations analyzed
